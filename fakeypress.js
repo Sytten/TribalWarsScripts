@@ -182,7 +182,7 @@ function addRowRemover() {
                         }
 						
 						if(numAttacks > 0) {
-							if(!$(#NbAttacks).length) {
+							if(!$('#NbAttacks').length) {
 								attackImg.after("<span id=NbAttacks style='font-weight:bold;'> (" + numAttacks + ")</span>");
 							}
 							if (numAttacks > userset[pos.s.MaxNbAttacks] && userset[pos.s.remattacks] == 1) {
