@@ -1,4 +1,4 @@
-﻿var version = "1.97";
+﻿var version = "1.98";
 var updateversion = 1.6;
 var keycodes = {
     "a": 65
@@ -38,6 +38,7 @@ var pos = {
         , remredy: 10
         , remredb: 11
         , remattsince: 12
+		, MaxNbAttacks: 13
     }
 };
 var faTable, userkeys, userset, totalrows, countedrows = 0;
@@ -117,13 +118,7 @@ function removeBadStuff() {
         var row = $(faTable)
             .find("tr")
             .eq(i);
-        if (userset[pos.s.remaxes] == 1 && $(row)
-            .html()
-            .indexOf('attack.png') != -1) {
-            $(row)
-                .remove();
-            i--;
-        } else if (userset[pos.s.remyellow] == 1 && $(row)
+        if (userset[pos.s.remyellow] == 1 && $(row)
             .html()
             .indexOf('yellow.png') != -1) {
             $(row)
@@ -159,7 +154,6 @@ function removeBadStuff() {
             $(row)
                 .remove();
             i--;
-        }
     }
 }
 
@@ -184,10 +178,16 @@ function addRowRemover() {
                             $(this)
                                 .find('img')
                                 .after("<span style='font-weight:bold;'> (" + numAttacks + ")</span>");
+							if (numAttacks > userset[pos.s.MaxNbAttacks] && userset[pos.s.remattacks] == 1) {
+								$(this).closest('.tr').remove();
+							}
                         } else if (typeof attackImg.attr('title') != 'undefined') {
                             var numAttacks = attackImg.attr('title')
                                 .replace(/\D/g, '');
                             attackImg.after("<span style='font-weight:bold;'> (" + numAttacks + ")</span>");
+							if (numAttacks > userset[pos.s.MaxNbAttacks] && userset[pos.s.remattacks] == 1) {
+								$(this).closest('.tr').remove();
+							}
                         }
                         break;
                     case 8:
@@ -388,7 +388,7 @@ function addTable() {
             "'> à <input type='text' id='txtLastPage' size='2' maxlength='2' value='" + userset[pos.s.lp] +
             "'><tr><td align='center'><b>Caché</b><td><input type='checkbox' id='chbRemAxes' onclick='return chkBoxClick($(this).is(\":checked\"), " + pos.s
             .remaxes +
-            ")'> <img src='https://media.innogamescdn.com/com_DS_FR/Scripts/Pillage/attacks.png' title='Attaque en cours' alt='' class='tooltip' /> Attaque en cours<br><input type='checkbox' id='chbRemBlue' onclick='return chkBoxClick($(this).is(\":checked\"), " +
+            ")'> <img src='https://media.innogamescdn.com/com_DS_FR/Scripts/Pillage/attacks.png' title='Attaques en cours (spécifier à partir de combien)' alt='' class='tooltip' /> Attaques en cours<br><input type='text' id='txtNbAttacks' size='2' maxlength='2' value='" + userset[pos.s.MaxNbAttacks] + "'><input type='checkbox' id='chbRemBlue' onclick='return chkBoxClick($(this).is(\":checked\"), " +
             pos.s.remblue +
             ")'> <img src='https://media.innogamescdn.com/com_DS_FR/Scripts/Pillage/blue.png' title='Espionné' alt='' class='tooltip' /> Espionné <br><input type='checkbox' id='chbRemGreen' onclick='return chkBoxClick($(this).is(\":checked\"), " +
             pos.s.remgreen +
@@ -474,6 +474,8 @@ function saveSettings() {
         .val();
     userset[pos.s.lp] = $('#txtLastPage')
         .val();
+	userset[pos.s.MaxNbAttacks] = $('#txtNbAttacks')
+		.val();
     setCookie(cookieName, "{" + version + "}[" + userkeys.toString() + "][" + userset.toString() + "]", 180);
     UI.SuccessMessage("Paramètres sauvés", 1000);
 }
@@ -515,7 +517,7 @@ function setCookie(cname, cvalue, exdays) {
 function resetCookie() {
     $.cookie(cookieName, null);
     userkeys = [65, 66, 67, 74, 39, 37, 90];
-    userset = ["distance", "asc", "0", "1", "1", "1", "0", "0", "0", "0", "0", "0", "0"];
+    userset = ["distance", "asc", "0", "1", "1", "1", "0", "0", "0", "0", "0", "0", "0", "0"];
     setCookie(cookieName, "{" + version + "}[" + userkeys.toString() + "][" + userset.toString() + "]", 180);
 }
 
