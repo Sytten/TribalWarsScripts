@@ -114,7 +114,7 @@ function initStuff() {
 function removeBadStuff() {
     for (var i = 1; i < $(faTable)
         .find("tr")
-        .length; i++) {
+        .length; i++) 
         var row = $(faTable)
             .find("tr")
             .eq(i);
