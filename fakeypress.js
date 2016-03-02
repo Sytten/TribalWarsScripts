@@ -185,7 +185,7 @@ function addRowRemover() {
 							if($(this).children("span").length === 0) {
 								attackImg.after("<span style='font-weight:bold;'> (" + numAttacks + ")</span>");
 							}
-							if (numAttacks > userset[pos.s.MaxNbAttacks] && userset[pos.s.remattacks] == 1) {
+							if (numAttacks > userset[pos.s.MaxNbAttacks] && userset[pos.s.remaxes] == 1) {
 								$(this).closest('.tr').remove();
 							}
 						}
