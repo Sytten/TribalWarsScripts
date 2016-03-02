@@ -181,8 +181,10 @@ function addRowRemover() {
                                 .replace(/\D/g, '');
                         }
 						
-						if(numAttacks > 0 && !new RegExp(/\((\d+)\)/g).test(this)) {
-							attackImg.after("<span style='font-weight:bold;'> (" + numAttacks + ")</span>");
+						if(numAttacks > 0) {
+							if(!$(#NbAttacks).length) {
+								attackImg.after("<span id=NbAttacks style='font-weight:bold;'> (" + numAttacks + ")</span>");
+							}
 							if (numAttacks > userset[pos.s.MaxNbAttacks] && userset[pos.s.remattacks] == 1) {
 								$(this).closest('.tr').remove();
 							}
