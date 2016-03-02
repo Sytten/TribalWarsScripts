@@ -385,8 +385,8 @@ function addTable() {
         .append($(
             "<table id='faKeySettings' class='vis' style='width:100%' cellspacing='0'><thead><tr><th colspan='3'><em>Paramêtres</em> - <a href'#' id='showSettings' onclick='return doSettings()'>Caché</a></thead><tbody id='bodySettings'><tr><td colspan='1' align='center'><input type='checkbox' id='chbLoadPages' onclick='return chkBoxClick($(this).is(\":checked\"), " +
             pos.s.loadp + ")'> <b>Charger les pages</b><td colspan='4'>De <input type='text' id='txtFirstPage' size='2' maxlength='2' value='" + userset[pos.s.fp] +
-            "' onchange='onlyNum(this)'> à <input type='text' id='txtLastPage' size='2' maxlength='2' value='" + userset[pos.s.lp] +
-            "' onchange='onlyNum(this)'><tr><td align='center'><b>Caché</b><td><input type='checkbox' id='chbRemAxes' onclick='return chkBoxClick($(this).is(\":checked\"), " + pos.s
+            "' onchange='onlyNum(this);'> à <input type='text' id='txtLastPage' size='2' maxlength='2' value='" + userset[pos.s.lp] +
+            "' onchange='onlyNum(this);'><tr><td align='center'><b>Caché</b><td><input type='checkbox' id='chbRemAxes' onclick='return chkBoxClick($(this).is(\":checked\"), " + pos.s
             .remaxes +
             ")'> <img src='https://media.innogamescdn.com/com_DS_FR/Scripts/Pillage/attacks.png' title='Attaques en cours (spécifier à partir de combien)' alt='' class='tooltip' /> Attaques en cours <input type='text' id='txtNbAttacks' size='2' maxlength='2' value='" + userset[pos.s.MaxNbAttacks] + "' onchange='onlyNum(this)'><input type='checkbox' id='chbRemBlue' onclick='return chkBoxClick($(this).is(\":checked\"), " +
             pos.s.remblue +
@@ -844,17 +844,11 @@ function openLoader() {
         .append($(widget));
 }
 
-function isNumber(evt) {
-    evt = (evt) ? evt : window.event;
-    var charCode = (evt.which) ? evt.which : evt.keyCode;
-    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-        return false;
-    }
-    return true;
-}
-
 function onlyNum(obj) {
       obj.value = obj.value.replace(/\D/g, '');
+      if(obj.value == ''){
+          obj.value = 0;
+      }
 }
 
 /****************************????????****************************/
