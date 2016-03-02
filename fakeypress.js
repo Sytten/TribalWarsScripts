@@ -385,10 +385,10 @@ function addTable() {
         .append($(
             "<table id='faKeySettings' class='vis' style='width:100%' cellspacing='0'><thead><tr><th colspan='3'><em>Paramêtres</em> - <a href'#' id='showSettings' onclick='return doSettings()'>Caché</a></thead><tbody id='bodySettings'><tr><td colspan='1' align='center'><input type='checkbox' id='chbLoadPages' onclick='return chkBoxClick($(this).is(\":checked\"), " +
             pos.s.loadp + ")'> <b>Charger les pages</b><td colspan='4'>De <input type='text' id='txtFirstPage' size='2' maxlength='2' value='" + userset[pos.s.fp] +
-            "' onchange='onlyNum(this);'> à <input type='text' id='txtLastPage' size='2' maxlength='2' value='" + userset[pos.s.lp] +
-            "' onchange='onlyNum(this);'><tr><td align='center'><b>Caché</b><td><input type='checkbox' id='chbRemAxes' onclick='return chkBoxClick($(this).is(\":checked\"), " + pos.s
+            "' onchange='onlyNum(this);' disable> à <input type='text' id='txtLastPage' size='2' maxlength='2' value='" + userset[pos.s.lp] +
+            "' onchange='onlyNum(this);' disable><tr><td align='center'><b>Caché</b><td><input type='checkbox' id='chbRemAxes' onclick='return chkBoxClick($(this).is(\":checked\"), " + pos.s
             .remaxes +
-            ")'> <img src='https://media.innogamescdn.com/com_DS_FR/Scripts/Pillage/attacks.png' title='Attaques en cours (spécifier à partir de combien)' alt='' class='tooltip' /> Attaques en cours <input type='text' id='txtNbAttacks' size='2' maxlength='2' value='" + userset[pos.s.MaxNbAttacks] + "' onchange='onlyNum(this)'><input type='checkbox' id='chbRemBlue' onclick='return chkBoxClick($(this).is(\":checked\"), " +
+            ")'> <img src='https://media.innogamescdn.com/com_DS_FR/Scripts/Pillage/attacks.png' title='Attaques en cours (spécifier à partir de combien)' alt='' class='tooltip' /> Attaques en cours <input type='text' id='txtNbAttacks' size='2' maxlength='2' value='" + userset[pos.s.MaxNbAttacks] + "' onchange='onlyNum(this)' disable><input type='checkbox' id='chbRemBlue' onclick='return chkBoxClick($(this).is(\":checked\"), " +
             pos.s.remblue +
             ")'> <img src='https://media.innogamescdn.com/com_DS_FR/Scripts/Pillage/blue.png' title='Espionné' alt='' class='tooltip' /> Espionné <br><input type='checkbox' id='chbRemGreen' onclick='return chkBoxClick($(this).is(\":checked\"), " +
             pos.s.remgreen +
@@ -427,6 +427,8 @@ function addTable() {
     if (userset[pos.s.remaxes] === "1") {
         $('#chbRemAxes')
             .prop("checked", true);
+        $('#txtNbAttacks')
+            .prop("disable", false);
     }
     if (userset[pos.s.remyellow] === "1") {
         $('#chbRemYellow')
@@ -435,6 +437,10 @@ function addTable() {
     if (userset[pos.s.loadp] === "1") {
         $('#chbLoadPages')
             .prop("checked", true);
+        $('#txtFirstPage')
+            .prop("disable", false);
+        $('#txtLastPage')
+            .prop("disable", false);
     }
 }
 
@@ -463,8 +469,26 @@ function doSettings() {
 function chkBoxClick(yolo, index) {
     if (yolo) {
         userset[index] = "1";
+        if(index === pos.s.loadp){
+            $('#txtFirstPage')
+                .prop("disable", false);
+            $('#txtLastPage')
+                .prop("disable", false);
+        } else if (index === pos.s.remaxes){
+            $('#txtNbAttacks')
+                .prop("disable", false);
+        }
     } else {
         userset[index] = "0";
+        if(index === pos.s.loadp){
+            $('#txtFirstPage')
+                .prop("disable", true);
+            $('#txtLastPage')
+                .prop("disable", true);
+        } else if (index === pos.s.remaxes){
+            $('#txtNbAttacks')
+                .prop("disable", true);
+        }
     }
     setCookie(cookieName, "{" + version + "}[" + userkeys.toString() + "][" + userset.toString() + "]", 180);
 }
