@@ -170,25 +170,23 @@ function addRowRemover() {
                     case 3:
                         var attackImg = $(this)
                             .find('img');
+						var numAttacks = 0;
                         if (typeof $(attackImg)
                             .prop('tooltipText') != 'undefined') {
-                            var numAttacks = $(attackImg)
+                            numAttacks = $(attackImg)
                                 .prop('tooltipText')
                                 .replace(/\D/g, '');
-                            $(this)
-                                .find('img')
-                                .after("<span style='font-weight:bold;'> (" + numAttacks + ")</span>");
-							if (numAttacks > userset[pos.s.MaxNbAttacks] && userset[pos.s.remaxes] == 1) {
-								$(this).closest('.tr').remove();
-							}
                         } else if (typeof attackImg.attr('title') != 'undefined') {
-                            var numAttacks = attackImg.attr('title')
+                            numAttacks = attackImg.attr('title')
                                 .replace(/\D/g, '');
-                            attackImg.after("<span style='font-weight:bold;'> (" + numAttacks + ")</span>");
+                        }
+						
+						if(numAttacks > 0 && !new RegExp(/\((\d+)\)/g).test(this)) {
+							attackImg.after("<span style='font-weight:bold;'> (" + numAttacks + ")</span>");
 							if (numAttacks > userset[pos.s.MaxNbAttacks] && userset[pos.s.remattacks] == 1) {
 								$(this).closest('.tr').remove();
 							}
-                        }
+						}
                         break;
                     case 8:
                         setOnclick($(this));
