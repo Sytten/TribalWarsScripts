@@ -854,7 +854,7 @@ function isNumber(evt) {
 }
 
 function onlyNum(obj) {
-      obj.val(obj.val().replace(/\D/g, ''));
+      obj.value = obj.value.replace(/\D/g, '');
 }
 
 /****************************????????****************************/
