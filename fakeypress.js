@@ -44,6 +44,9 @@ var faTable, userkeys, userset, totalrows, countedrows = 0;
 var pagesLoad = 0;
 pagesLoaded = false, pageLoading = false, start = false;
 
+
+
+/****************************1st called function****************************/
 function run() {
     checkPage();
     if (checkCookie()) {
@@ -89,6 +92,204 @@ function run() {
     }
 }
 
+
+
+/****************************Script initialisation****************************/
+function initStuff() {
+    $(document)
+        .off();
+    removeBadStuff();
+    addRowRemover();
+    makeItPretty();
+    addPressKey();
+    addTable();
+    doSettings();
+    Accountmanager.initTooltips();
+}
+
+
+
+/****************************Remover of undesired orders****************************/
+function removeBadStuff() {
+    for (var i = 1; i < $(faTable)
+        .find("tr")
+        .length; i++) {
+        var row = $(faTable)
+            .find("tr")
+            .eq(i);
+        if (userset[pos.s.remaxes] == 1 && $(row)
+            .html()
+            .indexOf('attack.png') != -1) {
+            $(row)
+                .remove();
+            i--;
+        } else if (userset[pos.s.remyellow] == 1 && $(row)
+            .html()
+            .indexOf('yellow.png') != -1) {
+            $(row)
+                .remove();
+            i--;
+        } else if (userset[pos.s.remredy] == 1 && $(row)
+            .html()
+            .indexOf('red_yellow.png') != -1) {
+            $(row)
+                .remove();
+            i--;
+        } else if (userset[pos.s.remredb] == 1 && $(row)
+            .html()
+            .indexOf('red_blue.png') != -1) {
+            $(row)
+                .remove();
+            i--;
+        } else if (userset[pos.s.remred] == 1 && $(row)
+            .html()
+            .indexOf('red.png') != -1) {
+            $(row)
+                .remove();
+            i--;
+        } else if (userset[pos.s.remgreen] == 1 && $(row)
+            .html()
+            .indexOf('green.png') != -1) {
+            $(row)
+                .remove();
+            i--;
+        } else if (userset[pos.s.remblue] == 1 && $(row)
+            .html()
+            .indexOf('blue.png') != -1) {
+            $(row)
+                .remove();
+            i--;
+        }
+    }
+}
+
+
+
+/****************************Display number of attacks****************************/
+function addRowRemover() {
+    $('#plunder_list tr:gt(0)')
+        .each(function (i) {
+            $(this)
+                .children("td")
+                .each(function (j) {
+                    switch (j) {
+                    case 3:
+                        var attackImg = $(this)
+                            .find('img');
+                        if (typeof $(attackImg)
+                            .prop('tooltipText') != 'undefined') {
+                            var numAttacks = $(attackImg)
+                                .prop('tooltipText')
+                                .replace(/\D/g, '');
+                            $(this)
+                                .find('img')
+                                .after("<span style='font-weight:bold;'> (" + numAttacks + ")</span>");
+                        } else if (typeof attackImg.attr('title') != 'undefined') {
+                            var numAttacks = attackImg.attr('title')
+                                .replace(/\D/g, '');
+                            attackImg.after("<span style='font-weight:bold;'> (" + numAttacks + ")</span>");
+                        }
+                        break;
+                    case 8:
+                        setOnclick($(this));
+                        break;
+                    case 9:
+                        setOnclick($(this));
+                        break;
+                    case 10:
+                        setOnclick($(this));
+                        break;
+                    }
+                });
+        });
+}
+
+
+
+/****************************Change row CSS****************************/
+function makeItPretty() {
+    $('h3')
+        .eq(0)
+        .text("Farm Assistant*");
+    $('.row_a')
+        .css("background-color", "rgb(216, 255, 216)");
+    $('#plunder_list')
+        .find('tr:gt(0)')
+        .each(function (index) {
+            $(this)
+                .removeClass('row_a');
+            $(this)
+                .removeClass('row_b');
+            if (index % 2 == 0) {
+                $(this)
+                    .addClass('row_a');
+            } else {
+                $(this)
+                    .addClass('row_b');
+            }
+        });
+    hideStuffs();
+}
+
+function hideStuffs() {
+    $('#contentContainer')
+        .find('div[class="vis"]')
+        .eq(0)
+        .children()
+        .eq(0)
+        .append($(
+            "<div class='vis' style='float:right;text-align:center;line-height:100%;width:12px;height:12px;margin:0px 0px 0px 0px;position:relative;background-color:tan;opacity:.7'><a href='#' num='0' onclick='uglyHider($(this));return false;'>+</a></div>"
+        ));
+    $('#contentContainer')
+        .find('div[class="vis"]')
+        .eq(0)
+        .children()
+        .eq(1)
+        .hide();
+    $('#am_widget_Farm')
+        .find('h4')
+        .eq(0)
+        .append($(
+            "<div class='vis' style='float:right;text-align:center;line-height:100%;width:12px;height:12px;margin:0px 0px 0px 0px;position:relative;background-color:tan;opacity:.7'><a href='#' num='1' onclick='uglyHider($(this));return false;'>+</a></div>"
+        ));
+    $('#plunder_list_filters')
+        .hide();
+}
+
+function uglyHider(linker) {
+    var basd;
+    if ($('#divFAPress')
+        .length > 0) {
+        basd = 1;
+    } else {
+        basd = 0;
+    }
+    if ($(linker)
+        .text() === "+") {
+        $(linker)
+            .text("-");
+    } else {
+        $(linker)
+            .text("+");
+    }
+    if (parseInt($(linker)
+            .attr('num')) == 0) {
+        $('#contentContainer')
+            .find('div[class="vis"]')
+            .eq(basd)
+            .children()
+            .eq(1)
+            .toggle();
+    } else if (parseInt($(linker)
+            .attr('num')) == 1) {
+        $('#plunder_list_filters')
+            .toggle();
+    }
+}
+
+
+
+/****************************Key events binding****************************/
 function addPressKey() {
     window.onkeypress = function (e) {
         checkKeys();
@@ -161,21 +362,9 @@ function click(letter) {
     }
 }
 
-function checkCookie() {
-    if (!($.cookie(cookieName))) {
-        return false;
-    } else {
-        return true;
-    }
-}
 
-function setCookie(cname, cvalue, exdays) {
-    var d = new Date();
-    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-    var expires = "expires=" + d.toGMTString();
-    document.cookie = cname + "=" + cvalue + "; " + expires + "; path=/";
-}
 
+/****************************Build Script Menu****************************/
 function addTable() {
     if ($('#divFAPress')) {
         $('#divFAPress')
@@ -249,6 +438,28 @@ function addTable() {
     }
 }
 
+
+
+/****************************Hide/Show Script Settings****************************/
+function doSettings() {
+    if ($('#showSettings')
+        .html()
+        .indexOf('Caché') != -1) {
+        $('#bodySettings')
+            .hide();
+        $('#showSettings')
+            .html('Voir');
+    } else {
+        $('#bodySettings')
+            .show();
+        $('#showSettings')
+            .html('Caché');
+    }
+}
+
+
+
+/****************************Settings Related functions****************************/
 function chkBoxClick(yolo, index) {
     if (yolo) {
         userset[index] = "1";
@@ -267,44 +478,6 @@ function saveSettings() {
     UI.SuccessMessage("Paramètres sauvés", 1000);
 }
 
-function doSettings() {
-    if ($('#showSettings')
-        .html()
-        .indexOf('Caché') != -1) {
-        $('#bodySettings')
-            .hide();
-        $('#showSettings')
-            .html('Voir');
-    } else {
-        $('#bodySettings')
-            .show();
-        $('#showSettings')
-            .html('Caché');
-    }
-}
-
-function showKeys() {
-    if ($('#showKeys')
-        .html()
-        .indexOf('>') == -1) {
-        $('#showKeys')
-            .html('Keys >>>');
-    } else {
-        $('#showKeys')
-            .html('Keys <<<');
-    }
-}
-
-function refresh() {
-    userkeys = [keycodes.a, keycodes.b, keycodes.c, keycodes.skip, keycodes.right, keycodes.left, keycodes.master];
-    setCookie(cookieName, "{" + version + "}[" + userkeys.toString() + "][" + userset.toString() + "]", 180);
-    setEditMode(10);
-    $('#divFAPress')
-        .remove();
-    addTable();
-    doSettings();
-}
-
 function setEditMode(let) {
     keyedits.a = false;
     keyedits.b = false;
@@ -321,11 +494,61 @@ function setEditMode(let) {
     }
 }
 
-function doTime(millsec) {
-    cansend = false;
-    setTimeout(function () {
-        cansend = true;
-    }, millsec);
+
+
+/****************************Cookies Handling****************************/
+function checkCookie() {
+    if (!($.cookie(cookieName))) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    var expires = "expires=" + d.toGMTString();
+    document.cookie = cname + "=" + cvalue + "; " + expires + "; path=/";
+}
+
+function resetCookie() {
+    $.cookie(cookieName, null);
+    userkeys = [65, 66, 67, 74, 39, 37, 90];
+    userset = ["distance", "asc", "0", "1", "1", "1", "0", "0", "0", "0", "0", "0", "0"];
+    setCookie(cookieName, "{" + version + "}[" + userkeys.toString() + "][" + userset.toString() + "]", 180);
+}
+
+
+
+/****************************Update Function****************************/
+function refresh() {
+    userkeys = [keycodes.a, keycodes.b, keycodes.c, keycodes.skip, keycodes.right, keycodes.left, keycodes.master];
+    setCookie(cookieName, "{" + version + "}[" + userkeys.toString() + "][" + userset.toString() + "]", 180);
+    setEditMode(10);
+    $('#divFAPress')
+        .remove();
+    addTable();
+    doSettings();
+}
+
+
+
+/****************************Unit Sender****************************/
+function setOnclick(button) {
+    var clickFunction = button.find('a')
+        .attr('onclick');
+    if (typeof clickFunction != 'undefined') {
+        var parameters = clickFunction.slice(clickFunction.indexOf("(") + 1, clickFunction.indexOf(")"));
+        var eachParameter = parameters.split(",");
+        if (clickFunction.indexOf("FromReport") == -1) {
+            button.find('a')
+                .attr('onclick', 'return customSendUnits(' + parameters + ', $(this))');
+        } else {
+            button.find('a')
+                .attr('onclick', 'return customSendUnitsFromReport(' + parameters + '))');
+        }
+    }
 }
 
 function customSendUnits(link, target_village, template_id, button) {
@@ -415,58 +638,16 @@ function customSendUnitsFromReport(link, target_village, report_id, button) {
     return false
 }
 
-function setOnclick(button) {
-    var clickFunction = button.find('a')
-        .attr('onclick');
-    if (typeof clickFunction != 'undefined') {
-        var parameters = clickFunction.slice(clickFunction.indexOf("(") + 1, clickFunction.indexOf(")"));
-        var eachParameter = parameters.split(",");
-        if (clickFunction.indexOf("FromReport") == -1) {
-            button.find('a')
-                .attr('onclick', 'return customSendUnits(' + parameters + ', $(this))');
-        } else {
-            button.find('a')
-                .attr('onclick', 'return customSendUnitsFromReport(' + parameters + '))');
-        }
-    }
-}
 
-function addRowRemover() {
+
+/****************************Pages display****************************/
+function removeFirstPage() {
+    $('#am_widget_Farm')
+        .hide();
     $('#plunder_list tr:gt(0)')
-        .each(function (i) {
-            $(this)
-                .children("td")
-                .each(function (j) {
-                    switch (j) {
-                    case 3:
-                        var attackImg = $(this)
-                            .find('img');
-                        if (typeof $(attackImg)
-                            .prop('tooltipText') != 'undefined') {
-                            var numAttacks = $(attackImg)
-                                .prop('tooltipText')
-                                .replace(/\D/g, '');
-                            $(this)
-                                .find('img')
-                                .after("<span style='font-weight:bold;'> (" + numAttacks + ")</span>");
-                        } else if (typeof attackImg.attr('title') != 'undefined') {
-                            var numAttacks = attackImg.attr('title')
-                                .replace(/\D/g, '');
-                            attackImg.after("<span style='font-weight:bold;'> (" + numAttacks + ")</span>");
-                        }
-                        break;
-                    case 8:
-                        setOnclick($(this));
-                        break;
-                    case 9:
-                        setOnclick($(this));
-                        break;
-                    case 10:
-                        setOnclick($(this));
-                        break;
-                    }
-                });
-        });
+        .remove();
+    $('#plunder_list_nav')
+        .hide();
 }
 
 function showPages() {
@@ -483,6 +664,12 @@ function showPages() {
         pages = parseInt(pages);
     }
     getPage(pages);
+}
+
+function addLoader() {
+    $("#contentContainer h3")
+        .eq(0)
+        .after("<div id='yoloLoader'><img src='graphic/throbber.gif' height='24' width='24'></img> <span id='yoloLoadText'> 0%</span></div>");
 }
 
 function getPage(pages) {
@@ -520,72 +707,14 @@ function getPage(pages) {
         });
 }
 
-function removeFirstPage() {
-    $('#am_widget_Farm')
-        .hide();
-    $('#plunder_list tr:gt(0)')
-        .remove();
-    $('#plunder_list_nav')
-        .hide();
-}
 
-function removeBadStuff() {
-    for (var i = 1; i < $(faTable)
-        .find("tr")
-        .length; i++) {
-        var row = $(faTable)
-            .find("tr")
-            .eq(i);
-        if (userset[pos.s.remaxes] == 1 && $(row)
-            .html()
-            .indexOf('attack.png') != -1) {
-            $(row)
-                .remove();
-            i--;
-        } else if (userset[pos.s.remyellow] == 1 && $(row)
-            .html()
-            .indexOf('yellow.png') != -1) {
-            $(row)
-                .remove();
-            i--;
-        } else if (userset[pos.s.remredy] == 1 && $(row)
-            .html()
-            .indexOf('red_yellow.png') != -1) {
-            $(row)
-                .remove();
-            i--;
-        } else if (userset[pos.s.remredb] == 1 && $(row)
-            .html()
-            .indexOf('red_blue.png') != -1) {
-            $(row)
-                .remove();
-            i--;
-        } else if (userset[pos.s.remred] == 1 && $(row)
-            .html()
-            .indexOf('red.png') != -1) {
-            $(row)
-                .remove();
-            i--;
-        } else if (userset[pos.s.remgreen] == 1 && $(row)
-            .html()
-            .indexOf('green.png') != -1) {
-            $(row)
-                .remove();
-            i--;
-        } else if (userset[pos.s.remblue] == 1 && $(row)
-            .html()
-            .indexOf('blue.png') != -1) {
-            $(row)
-                .remove();
-            i--;
-        }
-    }
-}
 
-function addLoader() {
-    $("#contentContainer h3")
-        .eq(0)
-        .after("<div id='yoloLoader'><img src='graphic/throbber.gif' height='24' width='24'></img> <span id='yoloLoadText'> 0%</span></div>");
+/****************************Helper Functions****************************/
+function doTime(millsec) {
+    cansend = false;
+    setTimeout(function () {
+        cansend = true;
+    }, millsec);
 }
 
 function checkPage() {
@@ -593,26 +722,6 @@ function checkPage() {
         getFA();
     }
 }
-
-function resetCookie() {
-    $.cookie(cookieName, null);
-    userkeys = [65, 66, 67, 74, 39, 37, 90];
-    userset = ["distance", "asc", "0", "1", "1", "1", "0", "0", "0", "0", "0", "0", "0"];
-    setCookie(cookieName, "{" + version + "}[" + userkeys.toString() + "][" + userset.toString() + "]", 180);
-}
-
-function initStuff() {
-    $(document)
-        .off();
-    removeBadStuff();
-    addRowRemover();
-    makeItPretty();
-    addPressKey();
-    addTable();
-    doSettings();
-    Accountmanager.initTooltips();
-}
-
 
 function getNewVillage(way) {
     Timing.pause();
@@ -714,30 +823,6 @@ function fadeThanksToCheese() {
     document.body.appendChild(fader);
 }
 
-function makeItPretty() {
-    $('h3')
-        .eq(0)
-        .text("Farm Assistant*");
-    $('.row_a')
-        .css("background-color", "rgb(216, 255, 216)");
-    $('#plunder_list')
-        .find('tr:gt(0)')
-        .each(function (index) {
-            $(this)
-                .removeClass('row_a');
-            $(this)
-                .removeClass('row_b');
-            if (index % 2 == 0) {
-                $(this)
-                    .addClass('row_a');
-            } else {
-                $(this)
-                    .addClass('row_b');
-            }
-        });
-    hideStuffs();
-}
-
 function openLoader() {
     var widget = document.createElement('div');
     widget.id = 'loaders';
@@ -757,59 +842,21 @@ function openLoader() {
         .append($(widget));
 }
 
-function hideStuffs() {
-    $('#contentContainer')
-        .find('div[class="vis"]')
-        .eq(0)
-        .children()
-        .eq(0)
-        .append($(
-            "<div class='vis' style='float:right;text-align:center;line-height:100%;width:12px;height:12px;margin:0px 0px 0px 0px;position:relative;background-color:tan;opacity:.7'><a href='#' num='0' onclick='uglyHider($(this));return false;'>+</a></div>"
-        ));
-    $('#contentContainer')
-        .find('div[class="vis"]')
-        .eq(0)
-        .children()
-        .eq(1)
-        .hide();
-    $('#am_widget_Farm')
-        .find('h4')
-        .eq(0)
-        .append($(
-            "<div class='vis' style='float:right;text-align:center;line-height:100%;width:12px;height:12px;margin:0px 0px 0px 0px;position:relative;background-color:tan;opacity:.7'><a href='#' num='1' onclick='uglyHider($(this));return false;'>+</a></div>"
-        ));
-    $('#plunder_list_filters')
-        .hide();
+
+
+/****************************????????****************************/
+function showKeys() {
+    if ($('#showKeys')
+        .html()
+        .indexOf('>') == -1) {
+        $('#showKeys')
+            .html('Keys >>>');
+    } else {
+        $('#showKeys')
+            .html('Keys <<<');
+    }
 }
 
-function uglyHider(linker) {
-    var basd;
-    if ($('#divFAPress')
-        .length > 0) {
-        basd = 1;
-    } else {
-        basd = 0;
-    }
-    if ($(linker)
-        .text() === "+") {
-        $(linker)
-            .text("-");
-    } else {
-        $(linker)
-            .text("+");
-    }
-    if (parseInt($(linker)
-            .attr('num')) == 0) {
-        $('#contentContainer')
-            .find('div[class="vis"]')
-            .eq(basd)
-            .children()
-            .eq(1)
-            .toggle();
-    } else if (parseInt($(linker)
-            .attr('num')) == 1) {
-        $('#plunder_list_filters')
-            .toggle();
-    }
-}
+
+
 run();
